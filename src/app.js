@@ -1,13 +1,13 @@
 const express = require("express");
 const app = express();
 
-app.get("/user", (req, res) => {
+app.get("/user/:id/:name/:age", (req, res) => {
+  console.log(req.params);
   res.send({ firstName: "Vishal", lastName: "Sahgal", age: 22 });
 });
 
 app.post("/user", (res, req) => {
-  const data = console.log("cehcking curosity");
-  req.send("User Data Changed" + data);
+  req.send("User Data Changed");
 });
 
 app.put("/user", (res, req) => {
