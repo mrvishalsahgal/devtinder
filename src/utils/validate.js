@@ -1,0 +1,19 @@
+const bcrypt = require("bcrypt");
+const validator = require("validator");
+
+const validatorSignup = (req) => {
+  const { firstName, lastName, email, password } = req.body;
+  if (!firstName || !lastName || !email || !password) {
+    throw new Error("All fields are required");
+  }
+  if (!validator.isEmail(email)) {
+    throw new Error("Invalid email");
+  }
+  if (!validator.isStrongPassword(password)) {
+    throw new Error("Invalid password");
+  }
+};
+
+module.exports = {
+  validatorSignup,
+};

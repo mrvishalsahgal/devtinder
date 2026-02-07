@@ -1,14 +1,19 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
       required: true,
+      minlength: 3,
+      maxlength: 30,
     },
     lastName: {
       type: String,
       required: true,
+      minlength: 3,
+      maxlength: 30,
     },
     email: {
       type: String,
@@ -16,10 +21,20 @@ const userSchema = new mongoose.Schema(
       required: true,
       lowercase: true,
       trim: true,
+      validate: function (value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Invalid email");
+        }
+      },
     },
     password: {
       type: String,
       required: true,
+      validate: function (value) {
+        if (!validator.isStrongPassword(value)) {
+          throw new Error("Invalid password");
+        }
+      },
     },
     age: {
       type: Number,
@@ -30,7 +45,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       validate: {
         validator: function (value) {
-          return value === "Male" || value === "Female" || value === "Other";
+          return value == "Male" || value == "Female" || value == "Other";
         },
         message: "Gender must be Male, Female or Other",
       },
