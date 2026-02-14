@@ -14,6 +14,23 @@ const validatorSignup = (req) => {
   }
 };
 
+const profileValidate = (req) => {
+  const isAllowedFields = [
+    "firstName",
+    "lastName",
+    "email",
+    "age",
+    "gender",
+    "role",
+    "skills",
+  ];
+  const isAllowedField = Object.keys(req.body).every((field) =>
+    isAllowedFields.includes(field),
+  );
+  return isAllowedField;
+};
+
 module.exports = {
   validatorSignup,
+  profileValidate,
 };
