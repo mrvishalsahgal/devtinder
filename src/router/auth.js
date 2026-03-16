@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const { userAuth } = require("../middleware/auth");
 const express = require("express");
 const authRouter = express.Router();
 const { validatorSignup } = require("../utils/validate");
@@ -51,6 +52,21 @@ authRouter.post("/logout", async (req, res) => {
   try {
     res.clearCookie("token");
     res.send("user logged out successfully");
+  } catch (error) {
+    res.status(500).send("ERROR: " + error.message);
+  }
+});
+
+authRouter.patch("/forgot-password", userAuth, async (req, res) => {
+  try {
+    const isMatch = await req.user.validatePassword(req.body.oldpass);
+    if (!isMatch) {
+      throw new Error("Invalid old password");
+    }
+    const hashPassword = await bcrypt.hash(req.body.newpass, 10);
+    req.user.password = hashPassword;
+    await req.user.save();
+    res.send("Password updated successfully");
   } catch (error) {
     res.status(500).send("ERROR: " + error.message);
   }
